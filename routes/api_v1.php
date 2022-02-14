@@ -22,6 +22,6 @@ Route::group(['prefix' => 'auth'] , function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('accounts', [AccountController::class, 'index'])->name("accounts");
-    Route::post('accounts/{accountId}/addBalance',[AccountController::class, 'addBalance'])->name('accounts.addBalance');
+    Route::post('accounts/addBalance',[AccountController::class, 'addBalance'])->name('accounts.addBalance');
 });
 

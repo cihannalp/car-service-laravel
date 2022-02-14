@@ -9,6 +9,7 @@ use App\Http\Resources\AccountResource;
 use App\Models\UserAccount;
 use App\Services\AccountTransactionService;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\AccountTransactionResource;
 
 class AccountController extends Controller
 {
@@ -26,14 +27,14 @@ class AccountController extends Controller
         return new AccountCollection($accounts);
     }
 
-    public function addBalance(AccountAddBalanceRequest $request, $accountId)
+    public function addBalance(AccountAddBalanceRequest $request)
     {
-        $account = UserAccount::find($accountId);
+        $account = Auth::user()->account();
 
         $accountTransactionService = new AccountTransactionService($account->id);
 
-        $accountTransactionService->deposit($request->amount);
-
-        return new AccountResource($account);
+        $accountTransaction = $accountTransactionService->deposit($request->amount);
+        
+        return new AccountTransactionResource($accountTransaction);
     }
 }

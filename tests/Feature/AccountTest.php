@@ -51,7 +51,7 @@ class AccountTest extends TestCase
     {
         $response = $this->actingAs($this->user)->json('GET','/api/v1/accounts');
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJsonStructure([
                 'data' => [
                     '*' => [
@@ -69,7 +69,7 @@ class AccountTest extends TestCase
     public function test_user_can_add_balance_to_account()
     {
         $response = $this->actingAs($this->user)
-            ->json('POST','/api/v1/accounts/'.$this->user->accounts->first()->id.'/addBalance',
+            ->json('POST','/api/v1/accounts/addBalance',
                 [
                     'amount' => 10,
                 ]
@@ -79,6 +79,19 @@ class AccountTest extends TestCase
 
         $this->assertDatabaseHas('user_accounts', [
             'balance' => 10
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->json('POST','/api/v1/accounts/addBalance',
+                [
+                    'amount' => 10.2,
+                ]
+        );
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('user_accounts', [
+            'balance' => 20.2
         ]);
     }
 }
