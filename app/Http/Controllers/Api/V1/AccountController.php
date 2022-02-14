@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Account\AccountAddBalanceRequest;
+use App\Http\Requests\Account\AccountDepositRequest;
 use App\Http\Resources\AccountCollection;
 use App\Http\Resources\AccountResource;
 use App\Models\UserAccount;
@@ -27,7 +27,7 @@ class AccountController extends Controller
         return new AccountCollection($accounts);
     }
 
-    public function addBalance(AccountAddBalanceRequest $request)
+    public function deposit(AccountDepositRequest $request)
     {
         $account = Auth::user()->account();
 
