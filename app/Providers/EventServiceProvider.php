@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\AccountTransaction;
+use App\Models\User;
+use App\Observers\AccountTransactionObserver;
+use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -21,12 +25,23 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     /**
+     * The model observers for your application.
+     *
+     * @var array
+     */
+    protected $observers = [
+        User::class => [UserObserver::class],
+        AccountTransaction::class => [AccountTransactionObserver::class],
+    ];
+
+    /**
      * Register any events for your application.
      *
      * @return void
      */
     public function boot()
     {
-        //
+        User::observe(UserObserver::class);
+        AccountTransaction::observe(AccountTransactionObserver::class);
     }
 }
