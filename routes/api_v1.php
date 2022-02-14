@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\AccountController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,6 +21,7 @@ Route::group(['prefix' => 'auth'] , function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    //Route::post('login', [AuthController::class, 'login'])->name("login");
+    Route::get('accounts', [AccountController::class, 'index'])->name("accounts");
+    Route::post('accounts/{accountId}/addBalance',[AccountController::class, 'addBalance'])->name('accounts.addBalance');
 });
 
