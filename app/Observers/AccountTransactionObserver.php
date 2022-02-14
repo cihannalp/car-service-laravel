@@ -16,6 +16,7 @@ class AccountTransactionObserver
     {
 
         $account = $accountTransaction->userAccount;
+        
         $account->balance = $account->balance + $accountTransaction->transaction_amount;
         
         $account->save();
@@ -40,7 +41,6 @@ class AccountTransactionObserver
      */
     public function deleted(AccountTransaction $accountTransaction)
     {
-        //dd($accountTransaction->transaction_amount);
         $account = $accountTransaction->userAccount;
 
         $account->balance = $account->balance - $accountTransaction->transaction_amount;
@@ -71,6 +71,10 @@ class AccountTransactionObserver
      */
     public function forceDeleted(AccountTransaction $accountTransaction)
     {
-        //
+        $account = $accountTransaction->userAccount;
+
+        $account->balance = $account->balance - $accountTransaction->transaction_amount;
+
+        $account->save();
     }
 }
