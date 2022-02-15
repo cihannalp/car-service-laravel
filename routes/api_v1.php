@@ -1,9 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\AccountController;
+use App\Http\Controllers\Api\V1\OrderController;
+use App\Http\Controllers\Api\V1\ServiceController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,5 +25,11 @@ Route::group(['prefix' => 'auth'] , function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('accounts', [AccountController::class, 'index'])->name("accounts");
     Route::post('accounts/deposit',[AccountController::class, 'deposit'])->name('accounts.deposit');
+
+    Route::get('services', [ServiceController::class, 'index'])->name('services');
+
+    Route::get('orders', [OrderController::class, 'index'])->name('orders');
+    Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
 });
+
 

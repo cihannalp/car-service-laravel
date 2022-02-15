@@ -30,4 +30,9 @@ class UserAccount extends Model
     {
         return $this->accountTransactions()->orderBy('desc','id')->first();
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

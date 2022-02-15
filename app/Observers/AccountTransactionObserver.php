@@ -18,7 +18,7 @@ class AccountTransactionObserver
         $account = $accountTransaction->userAccount;
         
         $account->balance = $account->balance + $accountTransaction->transaction_amount;
-        
+
         $account->save();
     }
 

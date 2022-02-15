@@ -13,6 +13,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        
+        \App\Models\Service::insert([
+            [
+                'service' => 'Cleaning',
+                'price' => 10
+            ],
+            [
+                'service' => 'Maintenance',
+                'price' => 20
+            ]
+        ]);
     }
 }
