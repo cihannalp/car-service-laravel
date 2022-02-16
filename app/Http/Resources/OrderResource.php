@@ -17,10 +17,12 @@ class OrderResource extends JsonResource
     {
         return [
             'balance' => $this->userAccount->balance,
-
             'order_id' => $this->id,
             'user_id' => Auth::id(),
+            'user_name' => $this->userAccount->user->name,
             'user_account_id' => $this->userAccount->id,
+            'car_model_id' => $this->car_model_id,
+            'car_model' => $this->CarModel->model,
             'total' => $this->total,
             'orderDetails' => new OrderDetailCollection($this->orderDetails()->with('service')->get()),
             'created_at' => $this->created_at,

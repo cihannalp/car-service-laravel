@@ -21,4 +21,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderDetail::class);
     }
+
+    public function carModel()
+    {
+        return $this->belongsTo(CarModel::class);
+    }
 }
