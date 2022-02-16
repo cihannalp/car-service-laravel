@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\AccountController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ServiceController;
+use App\Http\Controllers\Api\V1\CarModelsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('orders', [OrderController::class, 'index'])->name('orders');
     Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
+
+    Route::get('carModels', [CarModelsController::class, 'index'])->name('carModels');
 });
 
 

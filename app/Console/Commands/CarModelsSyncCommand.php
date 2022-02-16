@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\CarModel;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class CarModelsSyncCommand extends Command
 {
@@ -68,6 +69,8 @@ class CarModelsSyncCommand extends Command
         $this->line("");
         $this->line("");
         $this->info('Completed. Processed in '.$time.' seconds');
+
+        Cache::forget('carModels');
     }
 
     public function getCarModelsDataFromUrl($url)

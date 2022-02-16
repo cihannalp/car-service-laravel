@@ -6,10 +6,7 @@ use App\Models\AccountTransaction;
 use App\Models\User;
 use App\Services\AccountTransactionService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use function PHPUnit\Framework\assertTrue;
 
 class AccountTransactionTest extends TestCase
 {

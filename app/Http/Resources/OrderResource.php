@@ -16,11 +16,13 @@ class OrderResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'balance' => $this->userAccount->balance,
+
             'order_id' => $this->id,
             'user_id' => Auth::id(),
             'user_account_id' => $this->userAccount->id,
-            'balance' => $this->userAccount->balance,
-            'orderDetails' => new OrderDetailCollection($this->orderDetails),
+            'total' => $this->total,
+            'orderDetails' => new OrderDetailCollection($this->orderDetails()->with('service')->get()),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

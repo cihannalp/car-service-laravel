@@ -55,7 +55,7 @@ class AccountTransactionService
 		$accountTransaction->transaction_type_name = $transactionTypeName;
 		$accountTransaction->transaction_amount = $amount*$multiply;
 
-		if($this->account->balance + $accountTransaction->transaction_amount < 0)
+		if(UserAccount::find($this->accountId)->balance + $accountTransaction->transaction_amount < 0)
 		{
 			return null;
 		}
