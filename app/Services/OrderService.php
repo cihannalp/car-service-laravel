@@ -10,35 +10,33 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
-Class OrderService
+class OrderService
 {
-	protected $request;
+    protected $request;
 
-	public function __construct(Request $request)
-	{
-		$this->request = $request;
-	}
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
-	public function getOrders()
-	{
-		if($this->request->has('filters'))
-		{
-			return $this->filter();
-		}
+    public function getOrders()
+    {
+        if ($this->request->has('filters')) {
+            return $this->filter();
+        }
 
-		$orders = Cache::remember('orders', 3600*24*30, function () {
-		    return Auth::user()->account()->orders()->orderBy('id','desc')->paginate(10);
-		});
+        $orders = Cache::remember('orders', 3600*24*30, function () {
+            return Auth::user()->account()->orders()->orderBy('id', 'desc')->paginate(10);
+        });
 
-		return $orders;
+        return $orders;
+    }
 
-	}
+    public function createOrder()
+    {
+        $accountId = Auth::user()->account()->id;
 
-	public function createOrder()
-	{
-		$accountId = Auth::user()->account()->id;
-
-		$total = $this->getToTalPriceOfServices($this->request->service_ids);
+        $total = $this->getToTalPriceOfServices($this->request->service_ids);
 
         $order = new Order();
 
@@ -54,64 +52,58 @@ Class OrderService
 
         $accountTransaction = $accountTransactionService->pay($total);
 
-        if(!$accountTransaction)
-        {
-        	return null;
+        if (!$accountTransaction) {
+            return null;
         }
 
         Cache::forget('orders');
 
         return $order;
-	}
+    }
 
-	public function createOrderDetails($order_id, $service_ids)
-	{
-		foreach($service_ids as $service_id)
-		{
-			OrderDetail::create([
-				'order_id' => $order_id,
-				'service_id' => $service_id,
-				'price' => Service::find($service_id)->price
-			]);
-		}
-	}
-
-	public function createResponseCollection($data)
-	{
-		return collect($data);
-	}
-
-	protected function filter()
+    public function createOrderDetails($order_id, $service_ids)
     {
-    	$orders = new Order();
+        foreach ($service_ids as $service_id) {
+            OrderDetail::create([
+                'order_id' => $order_id,
+                'service_id' => $service_id,
+                'price' => Service::find($service_id)->price
+            ]);
+        }
+    }
 
-    	foreach($this->request->filters as $filter => $value)
-    	{
-    		if($filter === 'fromDate')
-    		{
-    			$orders = $orders->where('created_at', '>', $value);
-    		}
+    public function createResponseCollection($data)
+    {
+        return collect($data);
+    }
 
-    		if($filter === 'toDate')
-    		{
-    			$orders = $orders->where('created_at', '<', $value);
-    		}
+    protected function filter()
+    {
+        $orders = new Order();
 
-    		if($filter === 'serviceName')
-    		{
-    			$orders = $orders->whereHas('orderDetails', function(Builder $query) use ($value){
-    				$query->whereHas('service', function(Builder $query) use ($value) {
-    					$query->where('service', $value);
-    				});
-    			});
-    		}
-    	}
+        foreach ($this->request->filters as $filter => $value) {
+            if ($filter === 'fromDate') {
+                $orders = $orders->where('created_at', '>', $value);
+            }
 
-    	return $orders->orderBy('id', 'desc')->paginate(10);
+            if ($filter === 'toDate') {
+                $orders = $orders->where('created_at', '<', $value);
+            }
+
+            if ($filter === 'serviceName') {
+                $orders = $orders->whereHas('orderDetails', function (Builder $query) use ($value) {
+                    $query->whereHas('service', function (Builder $query) use ($value) {
+                        $query->where('service', $value);
+                    });
+                });
+            }
+        }
+
+        return $orders->orderBy('id', 'desc')->paginate(10);
     }
 
     public function getToTalPriceOfServices($service_ids)
-	{
-		return Service::whereIn('id', $service_ids)->get()->sum('price');
-	}
+    {
+        return Service::whereIn('id', $service_ids)->get()->sum('price');
+    }
 }

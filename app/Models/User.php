@@ -55,6 +55,6 @@ class User extends Authenticatable
     
     public function account()
     {
-        return $this->accounts()->where('is_default',1)->first();
+        return $this->accounts()->where('is_default', 1)->first();
     }
 }

@@ -10,7 +10,7 @@ class RegisterTest extends TestCase
     use RefreshDatabase;
 
     public function test_a_user_can_register()
-    { 
+    {
 
         $user = [
             'name' => 'cihan',
@@ -27,9 +27,9 @@ class RegisterTest extends TestCase
                 'token' => true,
             ]);
 
-        array_splice($user,2, 2);
+        array_splice($user, 2, 2);
 
-        $this->assertDatabaseHas('users', $user);       
+        $this->assertDatabaseHas('users', $user);
     }
 
     public function test_register_fails_if_email_already_exists()
@@ -43,12 +43,12 @@ class RegisterTest extends TestCase
 
         $response = $this->post('/api/v1/auth/register', $user);
 
-        $response = $this->json('POST','/api/v1/auth/register', $user);
+        $response = $this->json('POST', '/api/v1/auth/register', $user);
 
         $response
             ->assertStatus(422)
             ->assertJsonPath('errors.email.0', "The email has already been taken.");
-        $this->assertDatabaseCount('users',1);
+        $this->assertDatabaseCount('users', 1);
     }
 
     /**
@@ -56,11 +56,11 @@ class RegisterTest extends TestCase
      */
     public function test_register_fails_with_error_message_when_validation_fails($data)
     {
-        $response = $this->json('POST','/api/v1/auth/register', $data);
+        $response = $this->json('POST', '/api/v1/auth/register', $data);
         
         $response->assertStatus(422);
 
-        $this->assertDatabaseCount('users',0);
+        $this->assertDatabaseCount('users', 0);
     }
 
     public function invalidCredentials()

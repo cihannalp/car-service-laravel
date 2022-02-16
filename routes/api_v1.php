@@ -18,14 +18,14 @@ use App\Http\Controllers\Api\V1\CarModelsController;
 |
 */
 
-Route::group(['prefix' => 'auth'] , function () {
+Route::group(['prefix' => 'auth'], function () {
     Route::post('register', [AuthController::class, 'register'])->name("register");
     Route::post('login', [AuthController::class, 'login'])->name("login");
 });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('accounts', [AccountController::class, 'index'])->name("accounts");
-    Route::post('accounts/deposit',[AccountController::class, 'deposit'])->name('accounts.deposit');
+    Route::post('accounts/deposit', [AccountController::class, 'deposit'])->name('accounts.deposit');
 
     Route::get('services', [ServiceController::class, 'index'])->name('services');
 
@@ -34,5 +34,3 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('carModels', [CarModelsController::class, 'index'])->name('carModels');
 });
-
-

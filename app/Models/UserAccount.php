@@ -28,7 +28,7 @@ class UserAccount extends Model
 
     public function lastAccountTransaction()
     {
-        return $this->accountTransactions()->orderBy('desc','id')->first();
+        return $this->accountTransactions()->orderBy('desc', 'id')->first();
     }
 
     public function orders()

@@ -17,17 +17,19 @@ class LoginTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create(['password'=>'password']);
-
     }
 
     public function test_a_user_can_login()
     {
 
-        $response = $this->json('POST','/api/v1/auth/login', 
+        $response = $this->json(
+            'POST',
+            '/api/v1/auth/login',
             [
-                "email" => $this->user->email, 
+                "email" => $this->user->email,
                 "password" => 'password'
-            ]);
+            ]
+        );
 
         $response->assertStatus(200);
 
@@ -39,7 +41,7 @@ class LoginTest extends TestCase
      */
     public function test_login_fails_with_validation_errors($data)
     {
-        $response = $this->json('POST','/api/v1/auth/login', $data);
+        $response = $this->json('POST', '/api/v1/auth/login', $data);
 
         $response->assertStatus(422);
     }
@@ -49,7 +51,7 @@ class LoginTest extends TestCase
      */
     public function test_login_fails_if_credential_doesnt_match($data)
     {
-        $response = $this->json('POST','/api/v1/auth/login', $data);
+        $response = $this->json('POST', '/api/v1/auth/login', $data);
 
         $response->assertStatus(401);
     }

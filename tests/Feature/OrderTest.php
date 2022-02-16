@@ -31,7 +31,6 @@ class OrderTest extends TestCase
             ]
         ]);
         $this->userAccount = $this->user->accounts()->first();
-
     }
     
     public function test_a_user_can_create_a_new_order()
@@ -42,9 +41,8 @@ class OrderTest extends TestCase
                 1, 2
             ]
         ];
-        $response = $this->actingAs($this->user)->json('POST','/api/v1/orders', $data);
+        $response = $this->actingAs($this->user)->json('POST', '/api/v1/orders', $data);
 
         $response->assertStatus(200);
-
     }
 }

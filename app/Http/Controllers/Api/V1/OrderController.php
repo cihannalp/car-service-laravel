@@ -27,11 +27,10 @@ class OrderController extends Controller
         $order = $orderService->createOrder();
 
         
-        if(!$order)
-        {
+        if (!$order) {
             return response()->json([
                 "message"=>"Order could not be created",
-                "error" => "Account balance is not enough." 
+                "error" => "Account balance is not enough."
             ]);
         }
         

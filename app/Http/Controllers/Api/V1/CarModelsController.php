@@ -14,6 +14,7 @@ class CarModelsController extends Controller
         $carModels = Cache::remember('carModels', 3600*24*30, function () {
             return CarModel::paginate(10);
         });
+        
         return new CarModelCollection($carModels);
     }
 }

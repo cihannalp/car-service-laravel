@@ -47,40 +47,40 @@ class AccountTransactionTest extends TestCase
     public function test_transaction_services_working_and_balance_changed_properly()
     {
         $this->accountTransactionService->pay(10);
-        $this->assertEquals(50 ,$this->user->accounts()->first()->balance );
+        $this->assertEquals(50, $this->user->accounts()->first()->balance);
 
         $this->accountTransactionService->refund(10);
-        $this->assertEquals(60 ,$this->user->accounts()->first()->balance );
+        $this->assertEquals(60, $this->user->accounts()->first()->balance);
 
         $this->accountTransactionService->withdraw(33);
-        $this->assertEquals(27 ,$this->user->accounts()->first()->balance );
+        $this->assertEquals(27, $this->user->accounts()->first()->balance);
 
         $this->accountTransactionService->undoLastTransaction();
-        $this->assertEquals(60 ,$this->user->accounts()->first()->balance );
+        $this->assertEquals(60, $this->user->accounts()->first()->balance);
 
         $this->accountTransactionService->deposit(10);
-        $this->assertEquals(70 ,$this->user->accounts()->first()->balance );
+        $this->assertEquals(70, $this->user->accounts()->first()->balance);
     }
 
     public function test_last_trasaction_undoed_and_account_balance_properly_changed()
-    { 
+    {
         $this->accountTransactionService->undoLastTransaction();
 
-        $this->assertEquals(30 ,$this->user->accounts()->first()->balance );
+        $this->assertEquals(30, $this->user->accounts()->first()->balance);
 
         $this->accountTransactionService->undoLastTransaction();
 
-        $this->assertEquals(10 ,$this->user->accounts()->first()->balance );
+        $this->assertEquals(10, $this->user->accounts()->first()->balance);
     }
 
     public function test_transaction_deleted_by_id_and_balance_properly_changed()
-    { 
+    {
         $this->accountTransactionService->deleteTransaction(2);
 
-        $this->assertEquals(40 ,$this->user->accounts()->first()->balance );
+        $this->assertEquals(40, $this->user->accounts()->first()->balance);
 
         $this->accountTransactionService->deleteTransaction(1);
 
-        $this->assertEquals(30 ,$this->user->accounts()->first()->balance );
+        $this->assertEquals(30, $this->user->accounts()->first()->balance);
     }
 }

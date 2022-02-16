@@ -26,7 +26,6 @@ class AccountTest extends TestCase
         $this->user = User::factory()->create(['password'=>'password']);
 
         $this->userAccount = $this->user->accounts()->first();
-
     }
 
     public function test_an_account_created_when_a_new_user_registered()
@@ -44,12 +43,12 @@ class AccountTest extends TestCase
 
         $this->assertDatabaseHas('user_accounts', [
             'user_id' => $user->id,
-        ]); 
+        ]);
     }
 
     public function test_a_user_can_get_accounts_details()
     {
-        $response = $this->actingAs($this->user)->json('GET','/api/v1/accounts');
+        $response = $this->actingAs($this->user)->json('GET', '/api/v1/accounts');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -69,11 +68,13 @@ class AccountTest extends TestCase
     public function test_user_can_add_balance_to_account()
     {
         $response = $this->actingAs($this->user)
-            ->json('POST','/api/v1/accounts/deposit',
+            ->json(
+                'POST',
+                '/api/v1/accounts/deposit',
                 [
                     'amount' => 10,
                 ]
-        );
+            );
 
         $response->assertStatus(201);
 
@@ -82,11 +83,13 @@ class AccountTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->user)
-            ->json('POST','/api/v1/accounts/deposit',
+            ->json(
+                'POST',
+                '/api/v1/accounts/deposit',
                 [
                     'amount' => 10.2,
                 ]
-        );
+            );
 
         $response->assertStatus(201);
 
