@@ -24,6 +24,7 @@ class OrderResource extends JsonResource
             'car_model_id' => $this->car_model_id,
             'car_model' => $this->CarModel->model,
             'total' => $this->total,
+            'is_canceled' => $this->is_canceled,
             'orderDetails' => new OrderDetailCollection($this->orderDetails()->with('service')->get()),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

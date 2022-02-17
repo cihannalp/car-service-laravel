@@ -6,7 +6,6 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Service;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -14,15 +13,14 @@ class OrderService
 {
     protected $request;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->request = $request;
     }
 
-    public function getOrders()
+    public function getOrders($request)
     {
-        if ($this->request->has('filters')) {
-            return $this->filter();
+        if ($request->has('filters')) {
+            return $this->filter($request);
         }
 
         $orders = Cache::remember('orders', 3600*24*30, function () {
@@ -32,21 +30,21 @@ class OrderService
         return $orders;
     }
 
-    public function createOrder()
+    public function createOrder($request)
     {
         $accountId = Auth::user()->account()->id;
 
-        $total = $this->getToTalPriceOfServices($this->request->service_ids);
+        $total = $this->getToTalPriceOfServices($request->service_ids);
 
         $order = new Order();
 
         $order->user_account_id = $accountId;
-        $order->car_model_id = $this->request->car_model_id;
+        $order->car_model_id = $request->car_model_id;
         $order->total = $total;
         
         $order->save();
 
-        $this->createOrderDetails($order->id, $this->request->service_ids);
+        $this->createOrderDetails($order->id, $request->service_ids);
 
         $accountTransactionService = new AccountTransactionService($accountId);
 
@@ -57,6 +55,32 @@ class OrderService
         }
 
         Cache::forget('orders');
+
+        return $order;
+    }
+
+    public function getOrder($orderId)
+    {
+        $order = Cache::remember('order', 3600*24*30, function () use ($orderId){
+            return Order::find($orderId);
+        });
+
+        return $order;
+    }
+
+    public function cancelOrder($orderId)
+    {
+        $order = Order::find($orderId);
+
+        $accountId = Auth::user()->account()->id;
+
+        $accountTransactionService = new AccountTransactionService($accountId);
+
+        $accountTransactionService->refund($order->total);
+
+        $order->is_canceled = 1;
+
+        $order->save();
 
         return $order;
     }
@@ -72,16 +96,16 @@ class OrderService
         }
     }
 
-    public function createResponseCollection($data)
-    {
-        return collect($data);
-    }
-
-    protected function filter()
+    protected function filter($request)
     {
         $orders = new Order();
 
-        foreach ($this->request->filters as $filter => $value) {
+        foreach ($request->filters as $filter => $value) {
+
+            if ($filter === 'canceled') {
+                $orders = $orders->where('is_canceled', $value);
+            }
+
             if ($filter === 'fromDate') {
                 $orders = $orders->where('created_at', '>', $value);
             }

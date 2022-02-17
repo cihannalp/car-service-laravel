@@ -5,7 +5,7 @@ namespace App\Http\Requests\Account;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class AccountDepositRequest extends FormRequest
+class AccountDepositAndWithdrawRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -55,7 +55,8 @@ class AccountTransactionService
         $accountTransaction->transaction_type_name = $transactionTypeName;
         $accountTransaction->transaction_amount = $amount*$multiply;
 
-        if (UserAccount::find($this->accountId)->balance + $accountTransaction->transaction_amount < 0) {
+        if ( $this->isNewBalanceNegative($accountTransaction->transaction_amount) ) 
+        {
             return null;
         }
 
@@ -67,5 +68,15 @@ class AccountTransactionService
     public function checkIfLastTransactionTrashed()
     {
         return $this->account->accountTransactions()->withTrashed()->latest()->first()->trashed();
+    }
+
+    public function isNewBalanceNegative($transaction_amount)
+    {
+        return $this->calculateNewBalance($transaction_amount) < 0;
+    }
+
+    public function calculateNewBalance($transaction_amount)
+    {
+        return UserAccount::find($this->accountId)->balance + $transaction_amount;
     }
 }

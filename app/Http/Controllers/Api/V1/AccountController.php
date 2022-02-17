@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Account\AccountDepositRequest;
+use App\Http\Requests\Account\AccountDepositAndWithdrawRequest;
 use App\Http\Resources\AccountCollection;
-use App\Http\Resources\AccountResource;
-use App\Models\UserAccount;
 use App\Services\AccountTransactionService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\AccountTransactionResource;
@@ -27,7 +25,7 @@ class AccountController extends Controller
         return new AccountCollection($accounts);
     }
 
-    public function deposit(AccountDepositRequest $request)
+    public function deposit(AccountDepositAndWithdrawRequest $request)
     {
         $account = Auth::user()->account();
 
@@ -35,6 +33,24 @@ class AccountController extends Controller
 
         $accountTransaction = $accountTransactionService->deposit($request->amount);
         
+        return new AccountTransactionResource($accountTransaction);
+    }
+
+    public function withdraw(AccountDepositAndWithdrawRequest $request)
+    {
+        $account = Auth::user()->account();
+
+        $accountTransactionService = new AccountTransactionService($account->id);
+
+        $accountTransaction = $accountTransactionService->withdraw($request->amount);
+        
+        if (!$accountTransaction) {
+            return response()->json([
+                "message"=>"Balance is not enough",
+                "error" => "Balance can not be under 0"
+            ]);
+        }
+
         return new AccountTransactionResource($accountTransaction);
     }
 }
