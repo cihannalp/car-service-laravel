@@ -41,10 +41,6 @@ class OrderService
         $order->user_account_id = $accountId;
         $order->car_model_id = $request->car_model_id;
         $order->total = $total;
-        
-        $order->save();
-
-        $this->createOrderDetails($order->id, $request->service_ids);
 
         $accountTransactionService = new AccountTransactionService($accountId);
 
@@ -53,6 +49,10 @@ class OrderService
         if (!$accountTransaction) {
             return null;
         }
+
+        $order->save();
+
+        $this->createOrderDetails($order->id, $request->service_ids);
 
         Cache::forget('orders');
 
