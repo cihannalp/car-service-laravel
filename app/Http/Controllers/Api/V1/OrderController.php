@@ -8,6 +8,7 @@ use App\Http\Resources\OrderCollection;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Services\OrderService;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Request;
 
 class OrderController extends Controller
@@ -30,7 +31,8 @@ class OrderController extends Controller
         
         if (!$order) {
             return response()->json([
-                "message"=>"Order could not be created",
+                "balance" => Auth::user()->account()->balance,
+                "message" => "Order could not be created",
                 "error" => "Balance can not be under 0"
             ]);
         }

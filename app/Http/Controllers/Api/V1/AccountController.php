@@ -46,6 +46,7 @@ class AccountController extends Controller
         
         if (!$accountTransaction) {
             return response()->json([
+                "balance" => Auth::user()->account()->balance,
                 "message"=>"Balance is not enough",
                 "error" => "Balance can not be under 0"
             ]);
